@@ -24,6 +24,7 @@ const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiResponse
   try {
     if (req.method === 'POST') {
       // Validate request
+      console.log()
       await runMiddleware(req, res, middleware);
 
       // Handle events
@@ -56,7 +57,7 @@ const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiResponse
     if (e instanceof Error) {
       res.status(500).json({ name: e.name, message: e.message });
     } else {
-      res.status(500).end();
+      res.status(500).json({message: "この500エラー"});
     }
   }
 };
