@@ -23,7 +23,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // ChatGPT APIへのリクエスト本文を設定
     const data = {
       model: "text-davinci-002",
-      prompt: prompt,
+      prompt,
       max_tokens: 150,
       n: 1,
       stop: null,
