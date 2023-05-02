@@ -41,7 +41,7 @@ const getHorrorStory = async () => {
 
     return responseData;
   } catch (error) {
-    return { error: "エラー" };
+    return "";
   }
 };
 

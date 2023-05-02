@@ -1,6 +1,10 @@
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import { Middleware } from "@line/bot-sdk/dist/middleware";
 import { client, middleware } from "src/lib/line";
+import { WebhookRequestBody } from "@line/bot-sdk";
+import HORROR_STORY_MESSAGE from "src/const/userMessage";
+import getHorrorStory from "src/features/chatGPT/api";
+import RESPONSE_MESSAGE from "src/const/responseMessage";
 
 export const config = {
   api: {
@@ -21,24 +25,31 @@ const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiResponse
       await runMiddleware(req, res, middleware);
 
       // Handle events
-      const { body } = req;
+      const body: WebhookRequestBody = req.body;
       await Promise.all(
         body.events.map((event) =>
           (async () => {
             if (event.mode === "active") {
               switch (event.type) {
                 case "message": {
-                  const name = event.source.userId
-                    ? (await client.getProfile(event.source.userId)).displayName
-                    : "User";
+                  const userText = event.message.type === "text" ? event.message.text : "";
+                  const responseText =
+                    userText === HORROR_STORY_MESSAGE
+                      ? await getHorrorStory()
+                      : RESPONSE_MESSAGE.UNEXPECTED;
+
+                  if (!responseText) {
+                    await client.replyMessage(event.replyToken, {
+                      type: "text",
+                      text: RESPONSE_MESSAGE.ERROR,
+                    });
+                    return;
+                  }
+
                   await client.replyMessage(event.replyToken, {
                     type: "text",
-                    text: `Hi, ${name}!`,
+                    text: responseText,
                   });
-                  break;
-                }
-                case "follow": {
-                  // Do something.
                   break;
                 }
                 default: {
