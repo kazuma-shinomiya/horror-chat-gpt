@@ -72,8 +72,10 @@ const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiResponse
     }
   } catch (e) {
     if (e instanceof Error) {
+      console.log(e);
       res.status(500).json({ name: e.name, message: e.message });
     } else {
+      console.log(e);
       res.status(500).end();
     }
   }
