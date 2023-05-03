@@ -33,22 +33,33 @@ const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiResponse
               switch (event.type) {
                 case "message": {
                   const userText = event.message.type === "text" ? event.message.text : "";
-                  const responseText =
-                    userText === HORROR_STORY_MESSAGE
-                      ? await getHorrorStory()
-                      : RESPONSE_MESSAGE.UNEXPECTED;
-
-                  if (!responseText) {
+                  if (userText !== HORROR_STORY_MESSAGE) {
                     await client.replyMessage(event.replyToken, {
                       type: "text",
-                      text: RESPONSE_MESSAGE.ERROR,
+                      text: RESPONSE_MESSAGE.UNEXPECTED,
                     });
                     return;
                   }
 
                   await client.replyMessage(event.replyToken, {
                     type: "text",
-                    text: responseText,
+                    text: RESPONSE_MESSAGE.WAITING,
+                  });
+
+                  const horrorStory = await getHorrorStory();
+
+                  if (!horrorStory) {
+                    await client.replyMessage(event.replyToken, {
+                      type: "text",
+                      text: RESPONSE_MESSAGE.ERROR,
+                    });
+
+                    return;
+                  }
+
+                  await client.replyMessage(event.replyToken, {
+                    type: "text",
+                    text: horrorStory,
                   });
                   break;
                 }
