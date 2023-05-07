@@ -42,13 +42,11 @@ const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiResponse
                   }
 
                   const horrorStory = await getHorrorStory();
-
                   if (!horrorStory) {
                     await client.replyMessage(event.replyToken, {
                       type: "text",
                       text: RESPONSE_MESSAGE.ERROR,
                     });
-
                     return;
                   }
 

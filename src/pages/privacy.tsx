@@ -45,7 +45,7 @@ const POLICIES = [
   },
   {
     title: "お問い合わせ窓口",
-    description: "本ポリシーに関するお問い合わせは、以下の窓口までお願いいたします。",
+    description: "本ポリシーに関するお問い合わせは、こちらのメールまでお願いいたします。",
   },
 ];
 
@@ -57,7 +57,7 @@ export default function Privacy() {
         本プライバシーポリシー（以下、「本ポリシー」といいます）は、K.S（以下、「開発者」といいます）が開発・運営するLINEのチャットボット
         コワボット（以下、「本チャットボット」といいます）における、利用者の個人情報の取り扱いについて定めたものです。利用者は、本チャットボットを利用することにより、本ポリシーに同意したものとみなされます。
       </p>
-      <ul>
+      <ul className="mb-4">
         {POLICIES.map((policy, policyIndex) => {
           const { title, description, caseItems } = policy;
           return (
@@ -65,7 +65,13 @@ export default function Privacy() {
               <h3 className="font-semibold text-lg text-left">
                 {policyIndex + 1}.{title}
               </h3>
-              <p>{description}</p>
+              {title === "お問い合わせ窓口" ? (
+                <a href="mailto:chrisbrat0@gmail.com" className="text-sky-400">
+                  {description}
+                </a>
+              ) : (
+                <p>{description}</p>
+              )}
               {caseItems && (
                 <ol>
                   {caseItems.map((caseItem, caseIndex) => (
